@@ -39,7 +39,7 @@ dependencies {
     implementation("cc.dreamcode.command:bukkit:2.1.3")
 
     // -- dream-menu --
-    implementation("cc.dreamcode.menu:core:1.3.7")
+    implementation("cc.dreamcode.menu:core:1.3.9")
     implementation("cc.dreamcode.menu:bukkit-adventure:1.3.7")
     implementation("cc.dreamcode.menu:bukkit-adventure-serializer:1.3.7")
 
