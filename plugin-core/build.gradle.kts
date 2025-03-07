@@ -61,7 +61,7 @@ dependencies {
     implementation("eu.okaeri:okaeri-injector:2.1.0")
 
     // -- placeholders --
-    implementation("eu.okaeri:okaeri-placeholders-core:5.0.1")
+    implementation("eu.okaeri:okaeri-placeholders-core:5.1.1")
 
     // -- tasker (easy sync/async scheduler) --
     implementation("eu.okaeri:okaeri-tasker-bukkit:2.1.0-beta.3")
