@@ -1,7 +1,7 @@
-main: "cc.dreamcode.template.TemplatePlugin"
+main: "cc.dreamcode.missions.MissionsPlugin"
 version: "1.0-InDEV"
-name: "Dream-Template"
+name: "Dream-Missions"
 description: "Dream-Template plugin written by dreamcode.cc"
 website: "https://dreamcode.cc"
-author: "author"
+author: "eripe14"
 api-version: 1.13
