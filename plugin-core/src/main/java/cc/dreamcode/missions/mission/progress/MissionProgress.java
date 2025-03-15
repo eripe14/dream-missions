@@ -5,6 +5,7 @@ import eu.okaeri.persistence.document.Document;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.Duration;
 import java.time.Instant;
 
 @Data
@@ -19,6 +20,9 @@ public class MissionProgress extends Document {
 
     @CustomKey("finished")
     private boolean finished;
+
+    @CustomKey("time-to-reset")
+    private Duration timeToReset;
 
     @CustomKey("reset-date")
     private Instant resetDate;

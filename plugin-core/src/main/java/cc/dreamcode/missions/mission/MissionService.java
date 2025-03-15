@@ -46,8 +46,10 @@ public class MissionService {
 
         if (progress == null) {
             this.tasker.newSharedChain("dbops-" + id)
-                    .supplyAsync(() -> this.missionProgressRepository.getOrCreate(id))
+                    .supplyAsync(() -> this.missionProgressRepository.getOrCreate(id, mission.getResetTime()))
                     .acceptAsync(loadedProgress -> {
+                        loadedProgress.setResetDate(Instant.now().plus(mission.getResetTime()));
+
                         this.missionProgressCache.put(id, loadedProgress);
                     })
                     .execute();
@@ -57,6 +59,7 @@ public class MissionService {
             progress.setMissionId(id);
             progress.setCurrentAmount(0);
             progress.setResetDate(Instant.now().plus(mission.getResetTime()));
+            progress.setTimeToReset(MathUtil.difference(Instant.now(), progress.getResetDate().toEpochMilli()));
             System.out.println("set reset date");
             this.missionProgressCache.put(id, progress);
         }
@@ -97,6 +100,8 @@ public class MissionService {
         }
 
         int newAmount = progress.getCurrentAmount() + additionalAmount;
+        progress.setTimeToReset(Duration.between(Instant.now(), progress.getResetDate()));
+
         if (newAmount >= mission.getGoalAmount() && !progress.isFinished()) {
             newAmount = mission.getGoalAmount();
             Bukkit.getPluginManager().callEvent(new MissionFinishEvent(mission));
@@ -158,8 +163,10 @@ public class MissionService {
     public void loadAllMissionProgress() {
         this.tasker.newChain()
                 .async(() -> {
-                    this.missions.keySet().forEach(missionId -> {
-                        MissionProgress progress = this.missionProgressRepository.getOrCreate(missionId);
+                    this.missions.values().forEach(mission -> {
+                        int missionId = mission.getId();
+                        MissionProgress progress = this.missionProgressRepository.getOrCreate(missionId, mission.getResetTime());
+
                         this.missionProgressCache.put(missionId, progress);
                     });
                 })

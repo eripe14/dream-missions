@@ -5,6 +5,7 @@ import cc.dreamcode.menu.adventure.base.BukkitMenu;
 import cc.dreamcode.menu.adventure.setup.BukkitMenuPlayerSetup;
 import cc.dreamcode.missions.config.PluginConfig;
 import cc.dreamcode.missions.mission.progress.MissionProgress;
+import cc.dreamcode.utilities.TimeUtil;
 import cc.dreamcode.utilities.builder.MapBuilder;
 import cc.dreamcode.utilities.bukkit.builder.ItemBuilder;
 import eu.okaeri.injector.annotation.Inject;
@@ -53,9 +54,9 @@ public class MissionMenu implements BukkitMenuPlayerSetup {
                                                             ? missionConfig.missionStatusFinished
                                                             : missionConfig.missionStatusInProgress
                                             )
-                                            .put("{time}", this.missionService.getTimeToReset(missionId))
-                                            .put("{complete}", missionProgress.getCurrentAmount())
-                                            .put("{remaining}", mission.getGoalAmount() - missionProgress.getCurrentAmount())
+                                            .put("time", TimeUtil.format(missionProgress.getTimeToReset()))
+                                            .put("complete", missionProgress.getCurrentAmount())
+                                            .put("remaining", mission.getGoalAmount() - missionProgress.getCurrentAmount())
                                             .build()
                                     )
                                     .toItemStack()
