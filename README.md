@@ -23,9 +23,9 @@ This is a configurable mission system for Minecraft, allowing players to complet
     - `EATEN_FOOD` – Eat a specified number of food items.
 
 ## Watch demo video
-<video width="800" height="600" controls>
-  <source src="assets/demo-video.mp4" type="video/mp4">
-</video>
+
+https://github.com/user-attachments/assets/6f29c0fd-037f-4850-83f5-c50131f7f061
+
 
 
 ## Example Configuration
