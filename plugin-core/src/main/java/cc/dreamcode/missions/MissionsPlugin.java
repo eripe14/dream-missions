@@ -4,8 +4,8 @@ import cc.dreamcode.command.bukkit.BukkitCommandProvider;
 import cc.dreamcode.menu.adventure.BukkitMenuProvider;
 import cc.dreamcode.menu.adventure.serializer.MenuBuilderSerializer;
 import cc.dreamcode.missions.command.MissionCommand;
-import cc.dreamcode.missions.command.ReloadCommand;
 import cc.dreamcode.missions.mission.MissionMenu;
+import cc.dreamcode.missions.mission.MissionResetScheduler;
 import cc.dreamcode.missions.mission.progress.MissionProgressRepository;
 import cc.dreamcode.missions.mission.progress.MissionProgressScheduler;
 import cc.dreamcode.missions.mission.MissionService;
@@ -87,8 +87,8 @@ public final class MissionsPlugin extends DreamBukkitPlatform implements DreamBu
         componentService.registerComponent(MissionProgresController.class);
         componentService.registerComponent(MissionProgressScheduler.class);
         componentService.registerComponent(MissionMenu.class);
+        componentService.registerComponent(MissionResetScheduler.class);
 
-        componentService.registerComponent(ReloadCommand.class);
         componentService.registerComponent(MissionCommand.class);
     }
 

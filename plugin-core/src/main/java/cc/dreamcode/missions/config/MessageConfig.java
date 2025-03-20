@@ -47,4 +47,14 @@ public class MessageConfig extends OkaeriConfig {
             "&l&7Misja &f{mission-name} &7zostala ukonczona!"
     );
 
+    @CustomKey("mission-does-not-exist")
+    public BukkitNotice missionDoesNotExist = BukkitNotice.chat(
+            "&cMisja o podanym ID nie istnieje."
+    );
+
+    @CustomKey("mission-reset")
+    public BukkitNotice missionReset = BukkitNotice.chat(
+            "&l&7Misja &f{mission-name} &7zostala zresetowana!"
+    );
+
 }

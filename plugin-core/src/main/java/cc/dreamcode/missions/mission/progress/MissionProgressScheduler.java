@@ -10,7 +10,7 @@ import java.util.List;
 
 @Scheduler(delay = 20, interval = 20)
 @RequiredArgsConstructor(onConstructor_ = @Inject)
-public class MissionProgressScheduler implements Runnable{
+public class MissionProgressScheduler implements Runnable {
 
     private final MissionService missionService;
 
@@ -33,7 +33,6 @@ public class MissionProgressScheduler implements Runnable{
 
         if (!batchUpdates.isEmpty()) {
             this.missionService.saveBatchProgressAsync(batchUpdates);
-            System.out.println("Saved " + batchUpdates.size() + " mission progress updates");
         }
     }
 

@@ -16,7 +16,7 @@ public class MissionProgress extends Document {
     private int missionId;
 
     @CustomKey("current-amount")
-    private int currentAmount;
+    private double currentAmount;
 
     @CustomKey("finished")
     private boolean finished;

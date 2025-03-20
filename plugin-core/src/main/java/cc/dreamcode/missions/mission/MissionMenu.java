@@ -51,12 +51,14 @@ public class MissionMenu implements BukkitMenuPlayerSetup {
                                             .put("name", mission.getName())
                                             .put("percentage", progressPercentage)
                                             .put("status", progressPercentage >= 100.0
-                                                            ? missionConfig.missionStatusFinished
-                                                            : missionConfig.missionStatusInProgress
+                                                    ? missionConfig.missionStatusFinished
+                                                    : missionConfig.missionStatusInProgress
                                             )
                                             .put("time", TimeUtil.format(missionProgress.getTimeToReset()))
                                             .put("complete", missionProgress.getCurrentAmount())
-                                            .put("remaining", mission.getGoalAmount() - missionProgress.getCurrentAmount())
+                                            .put("remaining", missionProgress.isFinished() ?
+                                                    0 : mission.getGoalAmount() - missionProgress.getCurrentAmount()
+                                            )
                                             .build()
                                     )
                                     .toItemStack()

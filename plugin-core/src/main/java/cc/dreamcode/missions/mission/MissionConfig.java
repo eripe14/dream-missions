@@ -58,7 +58,7 @@ public class MissionConfig extends OkaeriConfig {
                             MissionType.MINED_BLOCKS,
                             10,
                     "give {player} minecraft:diamond 1",
-                            Duration.ofDays(1),
+                            Duration.ofMinutes(1),
                             FilterMode.ALL,
                             new MissionIcon(
                                     ItemBuilder.of(XMaterial.DIAMOND_PICKAXE.parseMaterial())

@@ -1,5 +1,6 @@
 package cc.dreamcode.missions.mission;
 
+import cc.dreamcode.missions.MissionsPlugin;
 import cc.dreamcode.missions.config.PluginConfig;
 import cc.dreamcode.missions.mission.progress.MissionProgress;
 import cc.dreamcode.missions.mission.progress.MissionProgressRepository;
@@ -54,20 +55,18 @@ public class MissionService {
                     })
                     .execute();
 
-            System.out.println(mission.getResetTime());
             progress = new MissionProgress();
             progress.setMissionId(id);
             progress.setCurrentAmount(0);
             progress.setResetDate(Instant.now().plus(mission.getResetTime()));
-            progress.setTimeToReset(MathUtil.difference(Instant.now(), progress.getResetDate().toEpochMilli()));
-            System.out.println("set reset date");
+            progress.setTimeToReset(Duration.between(Instant.now(), progress.getResetDate()));
             this.missionProgressCache.put(id, progress);
         }
 
         return progress;
     }
 
-    public void updateMissionsProgress(MissionType missionType, int additionalAmount) {
+    public void updateMissionsProgress(MissionType missionType, double additionalAmount) {
         for (Mission mission : this.missions.values()) {
             if (mission.getType() != missionType) {
                 continue;
@@ -77,7 +76,7 @@ public class MissionService {
         }
     }
 
-    public void updateMissionsProgress(Material material, MissionType missionType, int additionalAmount) {
+    public void updateMissionsProgress(Material material, MissionType missionType, double additionalAmount) {
         for (Mission mission : this.missions.values()) {
             if (mission.getType() != missionType) {
                 continue;
@@ -91,7 +90,7 @@ public class MissionService {
         }
     }
 
-    private void updateProgress(int missionId, int additionalAmount) {
+    private void updateProgress(int missionId, double additionalAmount) {
         MissionProgress progress = this.getMissionProgress(missionId);
         Mission mission = this.missions.get(missionId);
 
@@ -99,12 +98,15 @@ public class MissionService {
             return;
         }
 
-        int newAmount = progress.getCurrentAmount() + additionalAmount;
+        double newAmount = progress.getCurrentAmount() + additionalAmount;
         progress.setTimeToReset(Duration.between(Instant.now(), progress.getResetDate()));
 
         if (newAmount >= mission.getGoalAmount() && !progress.isFinished()) {
             newAmount = mission.getGoalAmount();
-            Bukkit.getPluginManager().callEvent(new MissionFinishEvent(mission));
+
+            Bukkit.getScheduler().runTask(MissionsPlugin.getInstance(), () -> {
+                Bukkit.getPluginManager().callEvent(new MissionFinishEvent(mission));
+            });
 
             progress.setCurrentAmount(newAmount);
             progress.setFinished(true);
@@ -118,22 +120,14 @@ public class MissionService {
         this.updateQueue.add(progress);
     }
 
-    public void resetMission(int missionId) {
+    public MissionProgress resetMission(int missionId) {
         MissionProgress progress = this.getMissionProgress(missionId);
         progress.setCurrentAmount(0);
         progress.setFinished(false);
 
         this.missionProgressCache.put(missionId, progress);
         this.updateQueue.add(progress);
-    }
-
-    public String getTimeToReset(int missionId) {
-        MissionProgress progress = this.getMissionProgress(missionId);
-
-        Instant now = Instant.now();
-        Duration difference = MathUtil.difference(now, progress.getResetDate().toEpochMilli());
-
-        return TimeUtil.format(difference);
+        return progress;
     }
 
     public double getProgressPercentage(int missionId) {
@@ -148,15 +142,12 @@ public class MissionService {
             return 100.0;
         }
 
-        return (double) progress.getCurrentAmount() / mission.getGoalAmount() * 100.0;
+        return progress.getCurrentAmount() / mission.getGoalAmount() * 100.0;
     }
 
     public void saveBatchProgressAsync(List<MissionProgress> progressList) {
         this.tasker.newChain()
-                .async(() -> progressList.forEach(progress -> {
-                    System.out.println("Saving mission progress for mission " + progress.getMissionId());
-                    this.missionProgressRepository.save(progress);
-                }))
+                .async(() -> progressList.forEach(this.missionProgressRepository::save))
                 .execute();
     }
 

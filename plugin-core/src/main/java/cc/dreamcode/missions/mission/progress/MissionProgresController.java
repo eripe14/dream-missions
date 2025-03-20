@@ -4,6 +4,7 @@ import cc.dreamcode.missions.config.MessageConfig;
 import cc.dreamcode.missions.config.PluginConfig;
 import cc.dreamcode.missions.mission.*;
 import eu.okaeri.injector.annotation.Inject;
+import eu.okaeri.tasker.core.Tasker;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -76,11 +77,13 @@ public class MissionProgresController implements Listener {
         Location from = event.getFrom();
         Location to = event.getTo();
 
-        if (from.getX() == to.getX() && from.getZ() == to.getZ() && from.getY() == to.getY()) {
+        if (from.getX() == to.getX() && from.getY() == to.getY() && from.getZ() == to.getZ()) {
             return;
         }
 
-        this.missionService.updateMissionsProgress(MissionType.RUNNING_DISTANCE, (int) from.distance(to));
+        if (from.getX() != to.getX() || from.getZ() != to.getZ() || from.getY() != to.getY()) {
+            this.missionService.updateMissionsProgress(MissionType.RUNNING_DISTANCE, from.distance(to));
+        }
     }
 
     @EventHandler
